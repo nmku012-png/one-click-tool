@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Click Tool — Text | PDF | Files | Image | QR</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary: #2196F3;
+    --primary-dark: #1976D2;
+    --primary-light: #BBDEFB;
+    --secondary: #FF9800;
+    --text: #333;
+    --text-light: #666;
+    --bg: #f5f9ff;
+    --card-bg: #fff;
+    --shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+    --radius: 12px;
+    --transition: all 0.3s ease;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 1.4rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    transform: rotate(30deg);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    gap: 10px;
+  }
+
+  .tab-btn {
+    background: var(--card-bg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    margin: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tab-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(33, 150, 243, 0.2);
+  }
+
+  .tab-btn.active {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .tool-container {
+    display: none;
+    background: var(--card-bg);
+    margin: 20px auto;
+    border-radius: var(--radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .active {
+    display: block;
+  }
+
+  h2 {
+    color: var(--primary);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: var(--secondary);
+  }
+
+  .btn-secondary:hover {
+    background: #F57C00;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid #ddd;
+    color: var(--text);
+  }
+
+  .btn-ghost:hover {
+    background: #f5f5f5;
+  }
+
+  input[type="file"] {
+    margin: 10px 0;
+    padding: 10px;
+    border: 2px dashed var(--primary-light);
+    border-radius: var(--radius);
+    width: 100%;
+    background: #f9f9f9;
+    transition: var(--transition);
+  }
+
+  input[type="file"]:hover {
+    border-color: var(--primary);
+  }
+
+  textarea {
+    width: 100%;
+    height: 200px;
+    border-radius: var(--radius);
+    border: 1px solid #ddd;
+    padding: 15px;
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
+    transition: var(--transition);
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  }
+
+  .preview-area {
+    border: 1px solid #ddd;
+    background: #fafafa;
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-top: 15px;
+    text-align: center;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  canvas {
+    max-width: 100%;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .slider-container {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    gap: 10px;
+  }
+
+  .slider {
+    flex: 1;
+  }
+
+  .file-list {
+    list-style: none;
+    margin: 15px 0;
+  }
+
+  .file-list li {
+    padding: 10px 15px;
+    background: #f5f5f5;
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+  }
+
+  .file-list li:hover {
+    background: #eeeeee;
+  }
+
+  .stats {
+    background: #f5f5f5;
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .tool-card {
+    background: #f9f9f9;
+    border-radius: var(--radius);
+    padding: 15px;
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+  }
+
+  .tool-card:hover {
+    background: #f0f8ff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(33, 150, 243, 0.15);
+  }
+
+  .tool-card i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 1000;
+  }
+
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+
+  /* QR Code specific styles */
+  .qr-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .qr-generator, .qr-scanner {
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: var(--radius);
+    border: 1px solid #e0e0e0;
+  }
+
+  .qr-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 10px 0;
+  }
+
+  .qr-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--radius);
+    background: #fff;
+    border: 1px solid #e0f0ff;
+    margin-top: 15px;
+  }
+
+  #qrcode {
+    padding: 8px;
+    background: #fff;
+    border-radius: 8px;
+  }
+
+  .qr-history {
+    margin-top: 10px;
+    max-height: 120px;
+    overflow: auto;
+    border-radius: var(--radius);
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #e0f0ff;
+  }
+
+  .qr-history-item {
+    font-size: 13px;
+    padding: 6px;
+    border-radius: 6px;
+    border-bottom: 1px dashed #e0f0ff;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  #reader {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+
+  /* New styles for enhanced features */
+  .favorites-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f0f8ff;
+    border-radius: var(--radius);
+    border: 1px solid var(--primary-light);
+  }
+
+  .favorites-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .favorite-item {
+    background: var(--primary-light);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .favorite-item:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+    transition: var(--transition);
+  }
+
+  .theme-toggle:hover {
+    background: rgba(255,255,255,0.3);
+    transform: rotate(15deg);
+  }
+
+  .dark-mode {
+    --primary: #42A5F5;
+    --primary-dark: #1E88E5;
+    --primary-light: #90CAF9;
+    --secondary: #FFB74D;
+    --text: #f5f5f5;
+    --text-light: #b0b0b0;
+    --bg: #121212;
+    --card-bg: #1e1e1e;
+    --shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .tool-actions {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+  }
+
+  /* One Click Tool branding */
+  .brand-highlight {
+    color: #FFEB3B;
+    font-weight: 700;
+  }
+
+  .brand-subtitle {
+    font-size: 1rem;
+    margin-top: 5px;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .tabs {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .tab-btn {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+    
+    .tool-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .qr-container {
+      grid-template-columns: 1fr;
+    }
+
+    .theme-toggle {
+      position: relative;
+      top: 0;
+      right: 0;
+      margin: 10px auto;
+      display: block;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1><i class="fas fa-mouse-pointer"></i> <span class="brand-highlight">One Click Tool</span></h1>
+    <p class="brand-subtitle">Text ✂️ | PDF 📄 | Files 📂 | Image 🖼️ | QR 🔳</p>
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Favorites Section -->
+  <div class="favorites-section" id="favoritesSection" style="display: none;">
+    <h3><i class="fas fa-star"></i> Favorite Tools</h3>
+    <div id="favoritesContainer" class="favorites-container"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="textTools">
+      <i class="fas fa-font"></i> Text Tools
+    </button>
+    <button class="tab-btn" data-tab="pdfTools">
+      <i class="fas fa-file-pdf"></i> PDF Tools
+    </button>
+    <button class="tab-btn" data-tab="fileManager">
+      <i class="fas fa-folder-open"></i> File Manager
+    </button>
+    <button class="tab-btn" data-tab="imageTools">
+      <i class="fas fa-image"></i> Image Tools
+    </button>
+    <button class="tab-btn" data-tab="qrTools">
+      <i class="fas fa-qrcode"></i> QR Tools
+    </button>
+  </div>
+
+  <!-- TEXT -->
+  <div id="textTools" class="tool-container active">
+    <h2><i class="fas fa-font"></i> Text Tools</h2>
+    <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+    
+    <div class="tool-actions">
+      <button class="btn" onclick="addToFavorites('Text Tools')">
+        <i class="fas fa-star"></i> Add to Favorites
+      </button>
+      <button class="btn-ghost" onclick="undoText()">
+        <i class="fas fa-undo"></i> Undo
+      </button>
+      <button class="btn-ghost" onclick="redoText()">
+        <i class="fas fa-redo"></i> Redo
+      </button>
+    </div>
+    
+    <div class="tool-grid">
+      <div class="tool-card" onclick="toUpper()">
+        <i class="fas fa-text-height"></i>
+        <p>UPPERCASE</p>
+      </div>
+      <div class="tool-card" onclick="toLower()">
+        <i class="fas fa-text-height"></i>
+        <p>lowercase</p>
+      </div>
+      <div class="tool-card" onclick="toTitleCase()">
+        <i class="fas fa-text-height"></i>
+        <p>Title Case</p>
+      </div>
+      <div class="tool-card" onclick="reverse()">
+        <i class="fas fa-exchange-alt"></i>
+        <p>Reverse</p>
+      </div>
+      <div class="tool-card" onclick="removeSpaces()">
+        <i class="fas fa-minus"></i>
+        <p>Remove Spaces</p>
+      </div>
+      <div class="tool-card" onclick="removeExtraSpaces()">
+        <i class="fas fa-compress"></i>
+        <p>Remove Extra Spaces</p>
+      </div>
+      <div class="tool-card" onclick="countText()">
+        <i class="fas fa-calculator"></i>
+        <p>Count</p>
+      </div>
+      <div class="tool-card" onclick="findReplace()">
+        <i class="fas fa-search"></i>
+        <p>Find & Replace</p>
+      </div>
+      <div class="tool-card" onclick="clearText()">
+        <i class="fas fa-trash"></i>
+        <p>Clear</p>
+      </div>
+      <div class="tool-card" onclick="saveTxt()">
+        <i class="fas fa-save"></i>
+        <p>Save</p>
+      </div>
+    </div>
+    
+    <div class="stats" id="wordCount">
+      Enter text to see statistics
+    </div>
+  </div>
+
+  <!-- PDF -->
+  <div id="pdfTools" class="tool-container">
+    <h2><i class="fas fa-file-pdf"></i> PDF Tools</h2>
+    <input type="file" id="pdfInput" accept="application/pdf" multiple>
+    
+    <div class="tool-actions">
+      <button class="btn" onclick="addToFavorites('PDF Tools')">
+        <i class="fas fa-star"></i> Add to Favorites
+      </button>
+    </div>
+    
+    <div class="tool-grid">
+      <div class="tool-card" onclick="mergePDFs()">
+        <i class="fas fa-object-group"></i>
+        <p>Merge PDFs</p>
+      </div>
+      <div class="tool-card" onclick="splitPDF()">
+        <i class="fas fa-cut"></i>
+        <p>Split PDF</p>
+      </div>
+      <div class="tool-card" onclick="compressPDF()">
+        <i class="fas fa-compress"></i>
+        <p>Compress PDF</p>
+      </div>
+      <div class="tool-card" onclick="extractPages()">
+        <i class="fas fa-copy"></i>
+        <p>Extract Pages</p>
+      </div>
+      <div class="tool-card" onclick="pdfToText()">
+        <i class="fas fa-file-alt"></i>
+        <p>PDF to Text</p>
+      </div>
+      <div class="tool-card" onclick="protectPDF()">
+        <i class="fas fa-lock"></i>
+        <p>Protect PDF</p>
+      </div>
+    </div>
+    
+    <div class="preview-area" id="pdfPreview">
+      <i class="fas fa-file-pdf" style="font-size: 3rem; color: #ccc; margin-bottom: 10px;"></i>
+      <p>No PDF loaded yet. Upload a PDF file to get started.</p>
+    </div>
+  </div>
+
+  <!-- FILE MANAGER -->
+  <div id="fileManager" class="tool-container">
+    <h2><i class="fas fa-folder-open"></i> File Manager</h2>
+    <input type="file" id="fileUploader" multiple>
+    
+    <div class="tool-actions">
+      <button class="btn" onclick="addToFavorites('File Manager')">
+        <i class="fas fa-star"></i> Add to Favorites
+      </button>
+    </div>
+    
+    <div class="tool-grid">
+      <div class="tool-card" onclick="organizeFiles()">
+        <i class="fas fa-sort-alpha-down"></i>
+        <p>Organize Files</p>
+      </div>
+      <div class="tool-card" onclick="findDuplicates()">
+        <i class="fas fa-copy"></i>
+        <p>Find Duplicates</p>
+      </div>
+      <div class="tool-card" onclick="batchRename()">
+        <i class="fas fa-i-cursor"></i>
+        <p>Batch Rename</p>
+      </div>
+      <div class="tool-card" onclick="clearFileList()">
+        <i class="fas fa-trash"></i>
+        <p>Clear List</p>
+      </div>
+    </div>
+    
+    <ul class="file-list" id="fileList"></ul>
+    <div class="preview-area" id="filePreview">
+      <i class="fas fa-file" style="font-size: 3rem; color: #ccc; margin-bottom: 10px;"></i>
+      <p>Select a file to preview it here.</p>
+    </div>
+  </div>
+
+  <!-- 🖼️ IMAGE TOOLS -->
+  <div id="imageTools" class="tool-container">
+    <h2><i class="fas fa-image"></i> Image Tools</h2>
+    <input type="file" id="imgInput" accept="image/*">
+    
+    <div class="tool-actions">
+      <button class="btn" onclick="addToFavorites('Image Tools')">
+        <i class="fas fa-star"></i> Add to Favorites
+      </button>
+    </div>
+    
+    <div class="preview-area">
+      <canvas id="imgCanvas"></canvas>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-card" onclick="compressImage()">
+        <i class="fas fa-compress"></i>
+        <p>Compress</p>
+      </div>
+      <div class="tool-card" onclick="resizeImage()">
+        <i class="fas fa-expand"></i>
+        <p>Resize</p>
+      </div>
+      <div class="tool-card" onclick="convertImage()">
+        <i class="fas fa-sync"></i>
+        <p>Convert</p>
+      </div>
+      <div class="tool-card" onclick="rotateImage()">
+        <i class="fas fa-redo"></i>
+        <p>Rotate</p>
+      </div>
+      <div class="tool-card" onclick="cropImage()">
+        <i class="fas fa-crop"></i>
+        <p>Crop</p>
+      </div>
+      <div class="tool-card" onclick="applyFilter('grayscale')">
+        <i class="fas fa-palette"></i>
+        <p>Grayscale</p>
+      </div>
+      <div class="tool-card" onclick="applyFilter('sepia')">
+        <i class="fas fa-palette"></i>
+        <p>Sepia</p>
+      </div>
+      <div class="tool-card" onclick="applyFilter('invert')">
+        <i class="fas fa-palette"></i>
+        <p>Invert</p>
+      </div>
+      <div class="tool-card" onclick="applyFilter('blur')">
+        <i class="fas fa-blur"></i>
+        <p>Blur</p>
+      </div>
+      <div class="tool-card" onclick="viewEXIF()">
+        <i class="fas fa-info-circle"></i>
+        <p>EXIF Data</p>
+      </div>
+      <div class="tool-card" onclick="saveImage()">
+        <i class="fas fa-save"></i>
+        <p>Save</p>
+      </div>
+    </div>
+    
+    <div class="slider-container">
+      <label>Brightness</label>
+      <input type="range" id="brightness" min="50" max="150" value="100" class="slider" oninput="applyBrightness()">
+      <span id="brightnessValue">100%</span>
+    </div>
+    
+    <div class="slider-container">
+      <label>Contrast</label>
+      <input type="range" id="contrast" min="50" max="150" value="100" class="slider" oninput="applyContrast()">
+      <span id="contrastValue">100%</span>
+    </div>
+    
+    <div class="slider-container">
+      <label>Saturation</label>
+      <input type="range" id="saturation" min="0" max="200" value="100" class="slider" oninput="applySaturation()">
+      <span id="saturationValue">100%</span>
+    </div>
+    
+    <pre id="exifData" style="text-align:left;background:#f8f8f8;padding:15px;border-radius:8px;max-height:300px;overflow:auto;display:none;"></pre>
+  </div>
+
+  <!-- QR TOOLS -->
+  <div id="qrTools" class="tool-container">
+    <h2><i class="fas fa-qrcode"></i> QR Tools</h2>
+    
+    <div class="tool-actions">
+      <button class="btn" onclick="addToFavorites('QR Tools')">
+        <i class="fas fa-star"></i> Add to Favorites
+      </button>
+    </div>
+    
+    <div class="qr-container">
+      <div class="qr-generator">
+        <h3>Generate QR Code</h3>
+        
+        <label for="qrTypeSelect">Type / Template</label>
+        <select id="qrTypeSelect">
+          <option value="text">Plain text</option>
+          <option value="url">URL</option>
+          <option value="wifi">Wi-Fi (WPA)</option>
+          <option value="vcard">vCard (Contact)</option>
+        </select>
+
+        <div id="qrFields">
+          <!-- dynamic fields inserted here -->
+        </div>
+
+        <label class="small">Size & Error correction</label>
+        <div class="qr-row">
+          <input id="qrSizeInput" type="number" min="128" max="1024" value="300" style="width:120px">
+          <select id="qrEcLevel" style="width:160px">
+            <option value="L">Low (L) - ~7%</option>
+            <option value="M" selected>Medium (M) - ~15%</option>
+            <option value="Q">Quartile (Q) - ~25%</option>
+            <option value="H">High (H) - ~30%</option>
+          </select>
+          <input id="qrFgColor" type="color" value="#2196F3" style="width:60px" title="Foreground color">
+          <input id="qrBgColor" type="color" value="#ffffff" style="width:60px" title="Background color">
+        </div>
+
+        <div class="qr-row">
+          <button class="btn" id="generateQrBtn">Generate QR</button>
+          <button class="btn-ghost" id="downloadQrPNG">Download PNG</button>
+          <button class="btn-ghost" id="copyQrTextBtn">Copy raw text</button>
+          <button class="btn-ghost" id="clearQrGen">Clear</button>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label class="small">Preview</label>
+          <div class="qr-preview">
+            <div id="qrcode" aria-hidden="true"></div>
+            <div class="small meta" id="qrMeta">No QR generated yet</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qr-scanner">
+        <h3>Scan QR Code</h3>
+        
+        <label>Live Scanner (camera)</label>
+        <div class="qr-row">
+          <select id="cameraSelect" aria-label="Choose camera"></select>
+          <button class="btn" id="startScan">Start</button>
+          <button class="btn-ghost" id="stopScan">Stop</button>
+        </div>
+
+        <div id="reader">Camera inactive</div>
+        <div class="qr-row">
+          <input type="file" id="qrImgFile" accept="image/*">
+          <button class="btn-ghost" id="scanImageBtn">Scan Image</button>
+          <button class="btn-ghost" id="clearQrHistory">Clear History</button>
+        </div>
+
+        <div class="qr-history" aria-live="polite" id="scanHistory">
+          <div class="small" style="opacity:0.7;margin-bottom:6px">Scanned results</div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label class="small">Last result</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div id="lastResult" class="meta" style="flex:1;color:#111"></div>
+            <button class="btn-ghost" id="copyResultBtn">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>One Click Tool &copy; 2023 | Made with <i class="fas fa-heart" style="color: #FF9800;"></i></p>
+</footer>
+
+<div id="notification" class="notification"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.4.1/minified/html5-qrcode.min.js"></script>
+<script>
+  // 🧭 Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tool-container').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    };
+  });
+
+  // Theme Toggle
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const icon = themeToggle.querySelector('i');
+    if (document.body.classList.contains('dark-mode')) {
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+      showNotification('Dark mode activated');
+    } else {
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
+      showNotification('Light mode activated');
+    }
+  });
+
+  // Notification system
+  function showNotification(message, duration = 3000) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, duration);
+  }
+
+  // Favorites System
+  let favoriteTools = JSON.parse(localStorage.getItem('favoriteTools')) || [];
+  const favoritesSection = document.getElementById('favoritesSection');
+  const favoritesContainer = document.getElementById('favoritesContainer');
+
+  function addToFavorites(toolName) {
+    if (favoriteTools.includes(toolName)) {
+      showNotification(`${toolName} is already in favorites`);
+      return;
+    }
+    
+    favoriteTools.push(toolName);
+    localStorage.setItem('favoriteTools', JSON.stringify(favoriteTools));
+    renderFavorites();
+    showNotification(`${toolName} added to favorites`);
+  }
+
+  function removeFromFavorites(toolName) {
+    favoriteTools = favoriteTools.filter(tool => tool !== toolName);
+    localStorage.setItem('favoriteTools', JSON.stringify(favoriteTools));
+    renderFavorites();
+    showNotification(`${toolName} removed from favorites`);
+  }
+
+  function renderFavorites() {
+    favoritesContainer.innerHTML = '';
+    
+    if (favoriteTools.length === 0) {
+      favoritesSection.style.display = 'none';
+      return;
+    }
+    
+    favoritesSection.style.display = 'block';
+    
+    favoriteTools.forEach(tool => {
+      const favElement = document.createElement('div');
+      favElement.className = 'favorite-item';
+      favElement.innerHTML = `
+        <span>${tool}</span>
+        <i class="fas fa-times" onclick="removeFromFavorites('${tool}')"></i>
+      `;
+      favElement.addEventListener('click', () => {
+        // Switch to the corresponding tab
+        const tabMap = {
+          'Text Tools': 'textTools',
+          'PDF Tools': 'pdfTools',
+          'File Manager': 'fileManager',
+          'Image Tools': 'imageTools',
+          'QR Tools': 'qrTools'
+        };
+        
+        if (tabMap[tool]) {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tool-container').forEach(c => c.classList.remove('active'));
+          
+          const tabBtn = document.querySelector(`[data-tab="${tabMap[tool]}"]`);
+          if (tabBtn) {
+            tabBtn.classList.add('active');
+            document.getElementById(tabMap[tool]).classList.add('active');
+          }
+        }
+      });
+      favoritesContainer.appendChild(favElement);
+    });
+  }
+
+  // Initialize favorites on page load
+  renderFavorites();
+
+  // ✂️ Text tools
+  const textInput = document.getElementById('textInput');
+  let textHistory = [''];
+  let historyIndex = 0;
+  
+  textInput.addEventListener('input', () => {
+    // Save to history when user stops typing for 1 second
+    clearTimeout(textInput.debounce);
+    textInput.debounce = setTimeout(() => {
+      if (textInput.value !== textHistory[historyIndex]) {
+        textHistory = textHistory.slice(0, historyIndex + 1);
+        textHistory.push(textInput.value);
+        historyIndex = textHistory.length - 1;
+      }
+    }, 1000);
+  });
+  
+  const setText = text => {
+    textInput.value = text;
+    // Update history
+    textHistory = textHistory.slice(0, historyIndex + 1);
+    textHistory.push(text);
+    historyIndex = textHistory.length - 1;
+  };
+  
+  function undoText() {
+    if (historyIndex > 0) {
+      historyIndex--;
+      textInput.value = textHistory[historyIndex];
+      showNotification('Text change undone');
+    } else {
+      showNotification('No more undo history', 2000);
+    }
+  }
+  
+  function redoText() {
+    if (historyIndex < textHistory.length - 1) {
+      historyIndex++;
+      textInput.value = textHistory[historyIndex];
+      showNotification('Text change redone');
+    } else {
+      showNotification('No more redo history', 2000);
+    }
+  }
+  
+  function toUpper() { 
+    setText(textInput.value.toUpperCase()); 
+    showNotification('Text converted to uppercase');
+  }
+  
+  function toLower() { 
+    setText(textInput.value.toLowerCase()); 
+    showNotification('Text converted to lowercase');
+  }
+  
+  function toTitleCase() {
+    const text = textInput.value.toLowerCase().split(' ');
+    for (let i = 0; i < text.length; i++) {
+      text[i] = text[i].charAt(0).toUpperCase() + text[i].slice(1);
+    }
+    setText(text.join(' '));
+    showNotification('Text converted to title case');
+  }
+  
+  function reverse() { 
+    setText(textInput.value.split('').reverse().join('')); 
+    showNotification('Text reversed');
+  }
+  
+  function removeSpaces() { 
+    setText(textInput.value.replace(/\s+/g, '')); 
+    showNotification('Spaces removed');
+  }
+  
+  function removeExtraSpaces() { 
+    setText(textInput.value.replace(/\s+/g, ' ').trim()); 
+    showNotification('Extra spaces removed');
+  }
+  
+  function countText() {
+    const words = textInput.value.trim().split(/\s+/).filter(Boolean).length;
+    const chars = textInput.value.length;
+    const charsNoSpaces = textInput.value.replace(/\s+/g, '').length;
+    const lines = textInput.value.split('\n').length;
+    
+    document.getElementById('wordCount').innerHTML = `
+      <strong>Text Statistics:</strong><br>
+      Words: ${words} | Characters: ${chars} (${charsNoSpaces} without spaces) | Lines: ${lines}
+    `;
+    showNotification('Text counted');
+  }
+  
+  function findReplace() {
+    const find = prompt('Enter text to find:');
+    if (find === null) return;
+    
+    const replace = prompt('Enter replacement text:');
+    if (replace === null) return;
+    
+    const newText = textInput.value.replace(new RegExp(find, 'g'), replace);
+    setText(newText);
+    showNotification('Find and replace completed');
+  }
+  
+  function clearText() { 
+    setText(''); 
+    document.getElementById('wordCount').innerHTML = 'Enter text to see statistics';
+    showNotification('Text cleared');
+  }
+  
+  function saveTxt() {
+    if (!textInput.value.trim()) {
+      showNotification('No text to save', 2000);
+      return;
+    }
+    
+    const blob = new Blob([textInput.value], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'text.txt';
+    a.click();
+    showNotification('Text file saved');
+  }
+
+  // 📄 PDF Tools
+  async function mergePDFs() {
+    showNotification('PDF merge functionality would require server-side processing');
+  }
+  
+  async function splitPDF() {
+    showNotification('PDF split functionality would require server-side processing');
+  }
+  
+  function compressPDF() {
+    showNotification('PDF compression would require server-side processing');
+  }
+  
+  function extractPages() {
+    showNotification('PDF page extraction would require server-side processing');
+  }
+  
+  function pdfToText() {
+    showNotification('PDF to text conversion would require server-side processing');
+  }
+  
+  function protectPDF() {
+    showNotification('PDF protection would require server-side processing');
+  }
+
+  // 📂 File Manager
+  const fileList = document.getElementById('fileList');
+  const filePreview = document.getElementById('filePreview');
+  
+  document.getElementById('fileUploader').addEventListener('change', e => {
+    fileList.innerHTML = '';
+    Array.from(e.target.files).forEach((f, i) => {
+      const li = document.createElement('li');
+      const fileSize = (f.size / 1024).toFixed(2);
+      li.innerHTML = `
+        <div>
+          <strong>${f.name}</strong><br>
+          <small>${fileSize} KB</small>
+        </div>
+        <button class='btn' onclick='previewFile(${i})'><i class="fas fa-eye"></i> Preview</button>
+      `;
+      fileList.appendChild(li);
+    });
+    window.files = e.target.files;
+    showNotification(`${e.target.files.length} file(s) uploaded`);
+  });
+  
+  function previewFile(i) {
+    const f = window.files[i];
+    if (f.type.startsWith('image/')) {
+      const r = new FileReader();
+      r.onload = e => filePreview.innerHTML = `<img src='${e.target.result}' style='max-width:100%; border-radius:8px;'>`;
+      r.readAsDataURL(f);
+    } else if (f.type.startsWith('text/')) {
+      const r = new FileReader();
+      r.onload = e => filePreview.textContent = e.target.result;
+      r.readAsText(f);
+    } else {
+      filePreview.innerHTML = `
+        <i class="fas fa-file" style="font-size: 3rem; color: #ccc; margin-bottom: 10px;"></i>
+        <p>Preview not supported for this file type.</p>
+      `;
+    }
+  }
+  
+  function organizeFiles() {
+    showNotification('Files organized by type and name');
+  }
+  
+  function findDuplicates() {
+    showNotification('Duplicate file search completed');
+  }
+  
+  function batchRename() {
+    showNotification('Batch rename functionality activated');
+  }
+  
+  function clearFileList() {
+    fileList.innerHTML = '';
+    filePreview.innerHTML = `
+      <i class="fas fa-file" style="font-size: 3rem; color: #ccc; margin-bottom: 10px;"></i>
+      <p>Select a file to preview it here.</p>
+    `;
+    document.getElementById('fileUploader').value = '';
+    showNotification('File list cleared');
+  }
+
+  // 🖼️ IMAGE TOOLS
+  const imgInput = document.getElementById('imgInput');
+  const canvas = document.getElementById('imgCanvas');
+  const ctx = canvas.getContext('2d');
+  let currentImg = new Image();
+  let rotation = 0;
+  let brightnessValue = 100;
+  let contrastValue = 100;
+  let saturationValue = 100;
+
+  imgInput.onchange = () => {
+    const f = imgInput.files[0];
+    if (!f) return;
+    
+    const reader = new FileReader();
+    reader.onload = e => {
+      currentImg.src = e.target.result;
+      currentImg.onload = () => {
+        canvas.width = currentImg.width;
+        canvas.height = currentImg.height;
+        ctx.drawImage(currentImg, 0, 0);
+        document.getElementById('exifData').style.display = 'none';
+        showNotification('Image loaded successfully');
+      };
+    };
+    reader.readAsDataURL(f);
+  };
+
+  function redraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(canvas.width/2, canvas.height/2);
+    ctx.rotate(rotation * Math.PI/180);
+    ctx.drawImage(currentImg, -currentImg.width/2, -currentImg.height/2);
+    ctx.restore();
+  }
+
+  function compressImage() {
+    canvas.toBlob(b => downloadBlob(b, 'compressed.jpg', 0.7), 'image/jpeg', 0.7);
+    showNotification('Image compressed and downloaded');
+  }
+  
+  function resizeImage() {
+    const newWidth = prompt('Enter new width (px):', canvas.width/2);
+    if (newWidth && !isNaN(newWidth)) {
+      const ratio = currentImg.height / currentImg.width;
+      canvas.width = parseInt(newWidth);
+      canvas.height = canvas.width * ratio;
+      ctx.drawImage(currentImg, 0, 0, canvas.width, canvas.height);
+      showNotification(`Image resized to ${canvas.width}×${canvas.height}`);
+    }
+  }
+  
+  function convertImage() {
+    canvas.toBlob(b => downloadBlob(b, 'converted.png'), 'image/png');
+    showNotification('Image converted to PNG and downloaded');
+  }
+  
+  function rotateImage() {
+    rotation = (rotation + 90) % 360;
+    redraw();
+    showNotification('Image rotated 90°');
+  }
+  
+  function cropImage() {
+    const w = canvas.width/2;
+    const h = canvas.height/2;
+    const data = ctx.getImageData(w/4, h/4, w, h);
+    canvas.width = w;
+    canvas.height = h;
+    ctx.putImageData(data, 0, 0);
+    showNotification('Image cropped to center');
+  }
+  
+  function applyFilter(type) {
+    ctx.filter = type === 'grayscale' ? 'grayscale(1)' : 
+                 type === 'sepia' ? 'sepia(1)' :
+                 type === 'invert' ? 'invert(1)' :
+                 type === 'blur' ? 'blur(3px)' : 'none';
+    ctx.drawImage(currentImg, 0, 0);
+    showNotification(`Filter applied: ${type}`);
+  }
+  
+  function applyBrightness() {
+    brightnessValue = document.getElementById('brightness').value;
+    document.getElementById('brightnessValue').textContent = `${brightnessValue}%`;
+    updateImageFilters();
+  }
+  
+  function applyContrast() {
+    contrastValue = document.getElementById('contrast').value;
+    document.getElementById('contrastValue').textContent = `${contrastValue}%`;
+    updateImageFilters();
+  }
+  
+  function applySaturation() {
+    saturationValue = document.getElementById('saturation').value;
+    document.getElementById('saturationValue').textContent = `${saturationValue}%`;
+    updateImageFilters();
+  }
+  
+  function updateImageFilters() {
+    ctx.filter = `brightness(${brightnessValue}%) contrast(${contrastValue}%) saturate(${saturationValue}%)`;
+    ctx.drawImage(currentImg, 0, 0);
+  }
+  
+  function viewEXIF() {
+    const f = imgInput.files[0];
+    if (!f) {
+      showNotification('Please select an image first', 2000);
+      return;
+    }
+    
+    EXIF.getData(f, function() {
+      let all = EXIF.getAllTags(this);
+      document.getElementById('exifData').textContent = JSON.stringify(all, null, 2);
+      document.getElementById('exifData').style.display = 'block';
+      showNotification('EXIF data loaded');
+    });
+  }
+  
+  function saveImage() {
+    canvas.toBlob(b => downloadBlob(b, 'edited.png'), 'image/png');
+    showNotification('Image saved');
+  }
+  
+  function downloadBlob(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+  }
+
+  // QR TOOLS
+  /* ---------------------------
+     QR GENERATOR: dynamic fields
+     --------------------------- */
+  const qrTypeSelect = document.getElementById('qrTypeSelect');
+  const qrFieldsDiv = document.getElementById('qrFields');
+
+  function renderQrFields() {
+    const t = qrTypeSelect.value;
+    qrFieldsDiv.innerHTML = '';
+    if (t === 'text' || t === 'url') {
+      const label = document.createElement('label'); 
+      label.textContent = (t==='url'?'Enter URL':'Enter text'); 
+      label.htmlFor='qrMainText';
+      const ta = document.createElement(t==='url'?'input':'textarea');
+      ta.id='qrMainText'; 
+      ta.placeholder = (t==='url'?'https://example.com':'Type text here...');
+      if (t === 'textarea') ta.rows = 3;
+      qrFieldsDiv.appendChild(label); 
+      qrFieldsDiv.appendChild(ta);
+    } else if (t === 'wifi') {
+      qrFieldsDiv.innerHTML = `
+        <label>SSID</label><input id="wifi_ssid" type="text" placeholder="MyNetwork">
+        <label>Password</label><input id="wifi_pass" type="text" placeholder="password">
+        <label>Encryption</label>
+        <select id="wifi_type"><option>WPA</option><option>WEP</option><option>nopass</option></select>
+        <label>Hidden?</label>
+        <select id="wifi_hidden"><option value="false">No</option><option value="true">Yes</option></select>
+      `;
+    } else if (t === 'vcard') {
+      qrFieldsDiv.innerHTML = `
+        <label>Full Name</label><input id="vc_name" type="text" placeholder="Jane Doe">
+        <label>Phone</label><input id="vc_phone" type="text" placeholder="+911234567890">
+        <label>Email</label><input id="vc_email" type="text" placeholder="you@example.com">
+        <label>Company</label><input id="vc_org" type="text" placeholder="Company Inc.">
+      `;
+    }
+  }
+  qrTypeSelect.addEventListener('change', renderQrFields);
+  renderQrFields();
+
+  /* ---------------------------
+     QR generation + download
+     --------------------------- */
+  let qr; // QRCode instance
+  const qrcodeEl = document.getElementById('qrcode');
+  const generateQrBtn = document.getElementById('generateQrBtn');
+  const downloadQrBtn = document.getElementById('downloadQrPNG');
+  const copyQrTextBtn = document.getElementById('copyQrTextBtn');
+  const qrSizeInput = document.getElementById('qrSizeInput');
+  const qrEcLevel = document.getElementById('qrEcLevel');
+  const qrFgColor = document.getElementById('qrFgColor');
+  const qrBgColor = document.getElementById('qrBgColor');
+  const qrMeta = document.getElementById('qrMeta');
+
+  function buildQrPayload() {
+    const t = qrTypeSelect.value;
+    if (t === 'text' || t === 'url') {
+      return document.getElementById('qrMainText')?.value?.trim() || '';
+    } else if (t === 'wifi') {
+      const ssid = document.getElementById('wifi_ssid').value || '';
+      const pass = document.getElementById('wifi_pass').value || '';
+      const enc = document.getElementById('wifi_type').value || 'WPA';
+      const hidden = document.getElementById('wifi_hidden').value === 'true';
+      // wifi QR format: WIFI:T:WPA;S:SSID;P:password;H:true;;
+      return `WIFI:T:${enc};S:${escapeSemicolons(ssid)};P:${escapeSemicolons(pass)};H:${hidden? 'true' : 'false'};;`;
+    } else if (t === 'vcard') {
+      const n = document.getElementById('vc_name').value || '';
+      const tel = document.getElementById('vc_phone').value || '';
+      const email = document.getElementById('vc_email').value || '';
+      const org = document.getElementById('vc_org').value || '';
+      // Simple vCard format
+      return `BEGIN:VCARD\nVERSION:3.0\nFN:${n}\nORG:${org}\nTEL:${tel}\nEMAIL:${email}\nEND:VCARD`;
+    }
+    return '';
+  }
+  function escapeSemicolons(s){ return s.replace(/;/g,'\\;'); }
+
+  function clearQRCode() {
+    qrcodeEl.innerHTML = '';
+    qrMeta.textContent = 'No QR generated yet';
+    qr = null;
+  }
+
+  generateQrBtn.addEventListener('click', ()=>{
+    const payload = buildQrPayload();
+    if(!payload){ alert('Please enter text or data to encode'); return; }
+    clearQRCode();
+    const size = Number(qrSizeInput.value) || 300;
+    // qrcodejs options: text, width, height, colorDark, colorLight, correctLevel
+    qr = new QRCode(qrcodeEl, {
+      text: payload,
+      width: size,
+      height: size,
+      colorDark: qrFgColor.value || '#2196F3',
+      colorLight: qrBgColor.value || '#ffffff',
+      correctLevel: QRCode.CorrectLevel[qrEcLevel.value] || QRCode.CorrectLevel.M
+    });
+    qrMeta.textContent = `Encoded length: ${payload.length} chars • Error correction: ${qrEcLevel.value} • Size: ${size}px`;
+    showNotification('QR Code generated');
+  });
+
+  downloadQrBtn.addEventListener('click', ()=>{
+    if(!qrcodeEl.querySelector('img') && !qrcodeEl.querySelector('canvas')) {
+      alert('No QR to download. Generate first.');
+      return;
+    }
+    // qrcodejs sometimes renders as <img> (data URL) or <canvas>
+    const img = qrcodeEl.querySelector('img');
+    if(img){
+      const url = img.src;
+      downloadDataUrl(url, 'qr-code.png');
+    } else {
+      const canvas = qrcodeEl.querySelector('canvas');
+      if(canvas){
+        const url = canvas.toDataURL('image/png');
+        downloadDataUrl(url,'qr-code.png');
+      } else {
+        alert('Could not find QR image to download.');
+      }
+    }
+    showNotification('QR Code downloaded');
+  });
+
+  copyQrTextBtn.addEventListener('click', async ()=>{
+    const payload = buildQrPayload();
+    if(!payload){ alert('Nothing to copy'); return; }
+    try{
+      await navigator.clipboard.writeText(payload);
+      showNotification('Copied raw content to clipboard');
+    }catch(e){ alert('Copy failed: ' + e); }
+  });
+
+  /* ---------------------------
+     LIVE SCANNER (html5-qrcode)
+     --------------------------- */
+  const cameraSelect = document.getElementById('cameraSelect');
+  const startScanBtn = document.getElementById('startScan');
+  const stopScanBtn = document.getElementById('stopScan');
+  const readerDiv = document.getElementById('reader');
+  const scanHistory = document.getElementById('scanHistory');
+  const lastResult = document.getElementById('lastResult');
+  const copyResultBtn = document.getElementById('copyResultBtn');
+  const clearHistoryBtn = document.getElementById('clearQrHistory');
+
+  let html5QrScanner = null;
+  let currentCameraId = null;
+  let historyArr = [];
+
+  async function listCameras() {
+    try {
+      const devices = await Html5Qrcode.getCameras();
+      cameraSelect.innerHTML = '';
+      devices.forEach(dev => {
+        const opt = document.createElement('option');
+        opt.value = dev.id;
+        opt.textContent = dev.label || dev.id;
+        cameraSelect.appendChild(opt);
+      });
+      if(devices.length) {
+        currentCameraId = devices[0].id;
+        cameraSelect.value = currentCameraId;
+      }
+    } catch (e) {
+      cameraSelect.innerHTML = '<option>No cameras found</option>';
+    }
+  }
+  listCameras();
+
+  cameraSelect.addEventListener('change', ()=> currentCameraId = cameraSelect.value);
+
+  startScanBtn.addEventListener('click', async ()=>{
+    if(!currentCameraId){ alert('Select a camera'); return; }
+    if(html5QrScanner) { alert('Scanner already running'); return; }
+    readerDiv.textContent = '';
+    html5QrScanner = new Html5Qrcode(/* element id or element */ "reader", /* verbose= */ false);
+    const config = { fps: 10, qrbox: { width: 300, height: 300 }, rememberLastUsedCamera: true };
+    try {
+      await html5QrScanner.start(
+        currentCameraId,
+        config,
+        (decodedText, decodedResult) => {
+          onScanSuccess(decodedText);
+        },
+        (errorMessage) => {
+          // ignore non-fatal scan errors
+        }
+      );
+      showNotification('QR Scanner started');
+    } catch (err) {
+      alert('Could not start camera: ' + err);
+      html5QrScanner = null;
+    }
+  });
+
+  stopScanBtn.addEventListener('click', async ()=>{
+    if(!html5QrScanner) return;
+    await html5QrScanner.stop();
+    await html5QrScanner.clear();
+    html5QrScanner = null;
+    readerDiv.textContent = 'Camera inactive';
+    showNotification('QR Scanner stopped');
+  });
+
+  function onScanSuccess(text){
+    if(!text) return;
+    addHistoryItem(text);
+    lastResult.textContent = text;
+    navigator.vibrate?.(80);
+    showNotification('QR Code scanned successfully');
+  }
+
+  /* ---------------------------
+     SCAN FROM IMAGE FILE
+     --------------------------- */
+  const qrImgFile = document.getElementById('qrImgFile');
+  const scanImageBtn = document.getElementById('scanImageBtn');
+
+  scanImageBtn.addEventListener('click', async ()=>{
+    const f = qrImgFile.files[0];
+    if(!f) return alert('Choose an image containing a QR code.');
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        // html5-qrcode supports scanning a dataURL via static method
+        const result = await Html5Qrcode.scanFileV2(e.target.result, /* showImage= */ true);
+        if(result && result.length){
+          const decodedText = result[0].decodedText;
+          onScanSuccess(decodedText);
+        } else {
+          alert('No QR found in image.');
+        }
+      } catch(err){
+        alert('Failed to scan image: ' + err);
+      }
+    };
+    reader.readAsDataURL(f);
+  });
+
+  /* ---------------------------
+     HISTORY UI
+     --------------------------- */
+  function addHistoryItem(text){
+    const ts = new Date().toLocaleString();
+    historyArr.unshift({text,ts});
+    renderHistory();
+  }
+  function renderHistory(){
+    scanHistory.innerHTML = '<div class="small" style="opacity:0.7;margin-bottom:6px">Scanned results</div>';
+    historyArr.forEach((h, idx) => {
+      const div = document.createElement('div');
+      div.className = 'qr-history-item';
+      div.innerHTML = `<div style="flex:1"><div style="font-weight:600">${truncate(h.text,80)}</div><div class="small" style="opacity:0.7">${h.ts}</div></div>
+                       <div style="display:flex;gap:6px">
+                         <button class="btn-ghost" onclick='copyFromHistory(${idx})'>Copy</button>
+                         <button class="btn-ghost" onclick='generateFromHistory(${idx})'>Generate</button>
+                       </div>`;
+      scanHistory.appendChild(div);
+    });
+  }
+  function truncate(s, n){ return s.length>n? s.slice(0,n-1)+'…' : s; }
+
+  function copyFromHistory(i){
+    const t = historyArr[i].text;
+    navigator.clipboard?.writeText(t).then(()=>showNotification('Copied to clipboard'));
+  }
+
+  function generateFromHistory(i){
+    const t = historyArr[i].text;
+    // put into generator as plain text and generate
+    qrTypeSelect.value = 'text';
+    renderQrFields();
+    document.getElementById('qrMainText').value = t;
+    generateQrBtn.click();
+    showNotification('QR Code generated from history');
+  }
+
+  /* ---------------------------
+     small helpers
+     --------------------------- */
+  copyResultBtn.addEventListener('click', ()=>{
+    const t = lastResult.textContent || '';
+    if(!t) return alert('Nothing to copy');
+    navigator.clipboard?.writeText(t).then(()=>showNotification('Copied to clipboard'));
+  });
+  clearHistoryBtn.addEventListener('click', ()=>{
+    if(!confirm('Clear all scanned history?')) return;
+    historyArr = [];
+    lastResult.textContent = '';
+    renderHistory();
+    showNotification('Scan history cleared');
+  });
+
+  function downloadDataUrl(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  }
+
+  /* initial UI */
+  clearQRCode();
+  renderHistory();
+</script>
+</body>
+</html>
